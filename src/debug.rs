@@ -1,19 +1,5 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::{
-    widgets::InNewWindow, Inspectable, InspectorPlugin, WorldInspectorParams, WorldInspectorPlugin,
-};
-
-#[derive(Inspectable, Default)]
-struct SomeComplexType {
-    very_long_field_name: Color,
-}
-
-#[derive(Inspectable, Default)]
-struct Inspector {
-    a: f32,
-    #[inspectable(title = "Complex Type", resizable)]
-    window: InNewWindow<SomeComplexType>,
-}
+use bevy_inspector_egui::{WorldInspectorParams, WorldInspectorPlugin};
 
 pub struct DebugPlugin;
 
@@ -27,7 +13,6 @@ impl Plugin for DebugPlugin {
                 enabled: true,
                 ..Default::default()
             })
-            .add_plugin(InspectorPlugin::<Inspector>::new())
             .add_plugin(WorldInspectorPlugin::new());
         }
     }

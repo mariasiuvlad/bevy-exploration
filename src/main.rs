@@ -1,11 +1,22 @@
 pub mod ascii;
+pub mod camera;
+pub mod collisions;
 pub mod debug;
+pub mod enemy;
+pub mod magic_missiles;
+pub mod physics3d;
 pub mod player;
+pub mod shield;
 
 use ascii::load_ascii_spritesheet;
-use bevy::{prelude::*, render::camera::ScalingMode};
+use bevy::prelude::*;
+use collisions::update_collisions;
 use debug::DebugPlugin;
+use enemy::EnemyPlugin;
+use magic_missiles::MagicMisslesPlugin;
+use physics3d::Physics3dPlugin;
 use player::PlayerPlugin;
+use shield::ShieldPlugin;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const ASPECT_RATIO: f32 = 16.0 / 9.0;
@@ -20,22 +31,15 @@ fn main() {
             height,
             ..Default::default()
         })
-        .add_startup_system_to_stage(StartupStage::PreStartup, load_ascii_spritesheet)
-        .add_startup_system(spawn_camera)
+        .add_plugins(DefaultPlugins)
+        // .add_plugin(GameCameraPlugin)
+        .add_plugin(Physics3dPlugin)
+        .add_plugin(MagicMisslesPlugin)
+        .add_plugin(ShieldPlugin)
         .add_plugin(PlayerPlugin)
         .add_plugin(DebugPlugin)
-        .add_plugins(DefaultPlugins)
+        .add_plugin(EnemyPlugin)
+        .add_startup_system_to_stage(StartupStage::PreStartup, load_ascii_spritesheet)
+        .add_system(update_collisions)
         .run();
-}
-
-fn spawn_camera(mut commands: Commands) {
-    let mut camera = OrthographicCameraBundle::new_2d();
-    camera.orthographic_projection.top = 1.0;
-    camera.orthographic_projection.bottom = -1.0;
-    camera.orthographic_projection.right = 1.0 * ASPECT_RATIO;
-    camera.orthographic_projection.left = -1.0 * ASPECT_RATIO;
-
-    camera.orthographic_projection.scaling_mode = ScalingMode::None;
-
-    commands.spawn_bundle(camera);
 }

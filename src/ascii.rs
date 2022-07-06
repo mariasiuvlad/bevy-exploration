@@ -31,10 +31,10 @@ pub fn spawn_ascii_sprite(
 
     commands
         .spawn_bundle(SpriteSheetBundle {
-            sprite: sprite,
+            sprite,
             texture_atlas: ascii.0.clone(),
             transform: Transform {
-                translation: translation,
+                translation,
                 ..Default::default()
             },
             ..Default::default()
